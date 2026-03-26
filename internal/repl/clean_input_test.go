@@ -28,7 +28,7 @@ func TestCleanInput(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := CleanInput(c.input)
+		actual := cleanInput(c.input)
 		for i := range actual {
 			word := actual[i]
 			expectedWord := c.expected[i]
