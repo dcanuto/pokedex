@@ -4,11 +4,20 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
+
+	"github.com/dcanuto/pokedexcli/internal/pokecache"
 )
 
 func StartRepl() {
+	const interval = 5 * time.Second
+
 	scanner := bufio.NewScanner(os.Stdin)
-	config := paginationConfig{}
+	config := paginationConfig{
+		next:     nil,
+		previous: nil,
+		cache:    pokecache.NewCache(interval),
+	}
 	for {
 		fmt.Print("Pokedex > ")
 

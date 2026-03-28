@@ -1,8 +1,11 @@
 package repl
 
+import "github.com/dcanuto/pokedexcli/internal/pokecache"
+
 type paginationConfig struct {
 	next     *string
 	previous *string
+	cache    pokecache.Cache
 }
 
 type cliCommand struct {

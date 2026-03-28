@@ -35,17 +35,26 @@ func commandMapb(config *paginationConfig) error {
 }
 
 func getLocationAreas(config *paginationConfig, url string) error {
-	res, err := http.Get(url)
-	if err != nil {
-		return err
+	body, exists := config.cache.Get(url)
+
+	if !exists {
+		res, err := http.Get(url)
+		if err != nil {
+			return err
+		}
+		body, err = io.ReadAll(res.Body)
+		if err != nil {
+			return err
+		}
+		defer res.Body.Close()
+		config.cache.Add(url, body)
+		fmt.Printf("Adding URL to cache: %s\n", url)
+	} else {
+		fmt.Printf("Retrieved areas from cache at URL: %s\n", url)
 	}
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
+
 	m := locationArea{}
-	err = json.Unmarshal(body, &m)
+	err := json.Unmarshal(body, &m)
 	if err != nil {
 		return err
 	}
