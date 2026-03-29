@@ -3,11 +3,11 @@ package repl
 import (
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
+
+	"github.com/dcanuto/pokedexcli/internal/pokecache"
 )
 
-type locationArea struct {
+type locationResourceList struct {
 	Count    int     `json:"count"`
 	Next     *string `json:"next"`
 	Previous *string `json:"previous"`
@@ -17,7 +17,7 @@ type locationArea struct {
 	} `json:"results"`
 }
 
-func commandMap(config *paginationConfig) error {
+func commandMap(config *config) error {
 	url := "https://pokeapi.co/api/v2/location-area/"
 	if config.next != nil {
 		url = *config.next
@@ -25,7 +25,7 @@ func commandMap(config *paginationConfig) error {
 	return getLocationAreas(config, url)
 }
 
-func commandMapb(config *paginationConfig) error {
+func commandMapb(config *config) error {
 	if config.previous == nil {
 		fmt.Println("you're on the first page")
 		return nil
@@ -34,27 +34,14 @@ func commandMapb(config *paginationConfig) error {
 	return getLocationAreas(config, url)
 }
 
-func getLocationAreas(config *paginationConfig, url string) error {
-	body, exists := config.cache.Get(url)
-
-	if !exists {
-		res, err := http.Get(url)
-		if err != nil {
-			return err
-		}
-		body, err = io.ReadAll(res.Body)
-		if err != nil {
-			return err
-		}
-		defer res.Body.Close()
-		config.cache.Add(url, body)
-		fmt.Printf("Adding URL to cache: %s\n", url)
-	} else {
-		fmt.Printf("Retrieved areas from cache at URL: %s\n", url)
+func getLocationAreas(config *config, url string) error {
+	body, err := pokecache.GetFromOrAddToCache(url, &config.cache)
+	if err != nil {
+		return err
 	}
 
-	m := locationArea{}
-	err := json.Unmarshal(body, &m)
+	m := locationResourceList{}
+	err = json.Unmarshal(body, &m)
 	if err != nil {
 		return err
 	}

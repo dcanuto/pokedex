@@ -2,16 +2,17 @@ package repl
 
 import "github.com/dcanuto/pokedexcli/internal/pokecache"
 
-type paginationConfig struct {
-	next     *string
-	previous *string
-	cache    pokecache.Cache
+type config struct {
+	next            *string
+	previous        *string
+	desiredLocation string
+	cache           pokecache.Cache
 }
 
 type cliCommand struct {
 	name        string
 	description string
-	Callback    func(*paginationConfig) error
+	Callback    func(*config) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -35,6 +36,11 @@ func getCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "Display the previous 20 locations",
 			Callback:    commandMapb,
+		},
+		"explore": {
+			name:        "explore",
+			description: "Display the Pokemon available in the provided area",
+			Callback:    commandExplore,
 		},
 	}
 }

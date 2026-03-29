@@ -13,10 +13,11 @@ func StartRepl() {
 	const interval = 5 * time.Second
 
 	scanner := bufio.NewScanner(os.Stdin)
-	config := paginationConfig{
-		next:     nil,
-		previous: nil,
-		cache:    pokecache.NewCache(interval),
+	config := config{
+		next:            nil,
+		previous:        nil,
+		desiredLocation: "",
+		cache:           pokecache.NewCache(interval),
 	}
 	for {
 		fmt.Print("Pokedex > ")
@@ -31,6 +32,9 @@ func StartRepl() {
 		if !ok {
 			fmt.Println("Unknown command")
 		} else {
+			if command.name == "explore" {
+				config.desiredLocation = cleanedInput[1]
+			}
 			err := command.Callback(&config)
 			if err != nil {
 				fmt.Println(err)

@@ -1,6 +1,9 @@
 package pokecache
 
 import (
+	"fmt"
+	"io"
+	"net/http"
 	"sync"
 	"time"
 )
@@ -59,4 +62,26 @@ func NewCache(interval time.Duration) Cache {
 	}
 	go cache.reapLoop(interval)
 	return cache
+}
+
+func GetFromOrAddToCache(url string, cache *Cache) ([]byte, error) {
+	body, exists := cache.Get(url)
+
+	if !exists {
+		res, err := http.Get(url)
+		if err != nil {
+			return nil, err
+		}
+		body, err = io.ReadAll(res.Body)
+		if err != nil {
+			return nil, err
+		}
+		defer res.Body.Close()
+		cache.Add(url, body)
+		fmt.Printf("Adding URL to cache: %s\n", url)
+	} else {
+		fmt.Printf("Retrieved from cache at URL: %s\n", url)
+	}
+
+	return body, nil
 }
