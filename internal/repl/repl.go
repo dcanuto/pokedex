@@ -17,7 +17,7 @@ func StartRepl() {
 		next:     nil,
 		previous: nil,
 		client:   pokeapi.NewClient(interval),
-		pokedex:  map[string]pokemon{},
+		pokedex:  map[string]pokeapi.Pokemon{},
 	}
 	for {
 		fmt.Print("Pokedex > ")

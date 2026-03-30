@@ -6,7 +6,7 @@ type config struct {
 	next     *string
 	previous *string
 	client   pokeapi.Client
-	pokedex  map[string]pokemon
+	pokedex  map[string]pokeapi.Pokemon
 }
 
 type cliCommand struct {
