@@ -6,6 +6,7 @@ type config struct {
 	next     *string
 	previous *string
 	cache    pokecache.Cache
+	pokedex  map[string]pokemon
 }
 
 type cliCommand struct {
@@ -40,6 +41,11 @@ func getCommands() map[string]cliCommand {
 			name:        "explore",
 			description: "Display the Pokemon available in the provided area",
 			Callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Attempt to catch the named Pokemon",
+			Callback:    commandCatch,
 		},
 	}
 }
