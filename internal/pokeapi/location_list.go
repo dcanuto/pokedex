@@ -16,8 +16,8 @@ func (c *Client) GetLocationAreas(pageUrl *string) (locationResourceList, error)
 		return locationResourceList{}, err
 	}
 
-	m := locationResourceList{}
-	err = json.Unmarshal(body, &m)
+	locationAreas := locationResourceList{}
+	err = json.Unmarshal(body, &locationAreas)
 
-	return m, err
+	return locationAreas, err
 }

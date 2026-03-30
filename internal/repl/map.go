@@ -5,14 +5,14 @@ import (
 )
 
 func commandMap(config *config, location string) error {
-	m, err := config.client.GetLocationAreas(config.next)
+	locationAreas, err := config.client.GetLocationAreas(config.next)
 	if err != nil {
 		return err
 	}
 
-	config.next = m.Next
-	config.previous = m.Previous
-	for _, result := range m.Results {
+	config.next = locationAreas.Next
+	config.previous = locationAreas.Previous
+	for _, result := range locationAreas.Results {
 		fmt.Println(result.Name)
 	}
 	return nil
@@ -24,14 +24,14 @@ func commandMapb(config *config, location string) error {
 		return nil
 	}
 
-	m, err := config.client.GetLocationAreas(config.previous)
+	locationAreas, err := config.client.GetLocationAreas(config.previous)
 	if err != nil {
 		return err
 	}
 
-	config.next = m.Next
-	config.previous = m.Previous
-	for _, result := range m.Results {
+	config.next = locationAreas.Next
+	config.previous = locationAreas.Previous
+	for _, result := range locationAreas.Results {
 		fmt.Println(result.Name)
 	}
 	return nil
