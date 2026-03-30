@@ -312,9 +312,10 @@ func commandCatch(config *config, name string) error {
 	// while advanced ones (e.g., Mewtwo) give around 300. So this
 	// gives about 95% chance to catch a starter,
 	// and about 20% chance to catch something advanced.
-	base := rand.Intn(m.BaseExperience)
-	caught := 60-base > 0
-	if caught {
+	result := rand.Intn(m.BaseExperience)
+	if result > 60 {
+		fmt.Printf("%s escaped!\n", name)
+	} else {
 		fmt.Printf("%s was caught!\n", name)
 		_, ok := config.pokedex[name]
 		if ok {
@@ -323,8 +324,6 @@ func commandCatch(config *config, name string) error {
 			fmt.Printf("Adding %s to Pokedex.\n", name)
 			config.pokedex[name] = m
 		}
-	} else {
-		fmt.Printf("%s escaped!\n", name)
 	}
 
 	return nil
