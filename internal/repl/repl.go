@@ -14,10 +14,9 @@ func StartRepl() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	config := config{
-		next:            nil,
-		previous:        nil,
-		desiredLocation: "",
-		cache:           pokecache.NewCache(interval),
+		next:     nil,
+		previous: nil,
+		cache:    pokecache.NewCache(interval),
 	}
 	for {
 		fmt.Print("Pokedex > ")
@@ -25,6 +24,10 @@ func StartRepl() {
 		scanner.Scan()
 		rawInput := scanner.Text()
 		cleanedInput := cleanInput(rawInput)
+		commandArgument := ""
+		if len(cleanedInput) == 2 {
+			commandArgument = cleanedInput[1]
+		}
 
 		commandName := cleanedInput[0]
 
@@ -32,10 +35,7 @@ func StartRepl() {
 		if !ok {
 			fmt.Println("Unknown command")
 		} else {
-			if command.name == "explore" {
-				config.desiredLocation = cleanedInput[1]
-			}
-			err := command.Callback(&config)
+			err := command.Callback(&config, commandArgument)
 			if err != nil {
 				fmt.Println(err)
 			}

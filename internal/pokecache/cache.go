@@ -37,6 +37,15 @@ func (c *Cache) Get(key string) ([]byte, bool) {
 	return nil, ok
 }
 
+func NewCache(interval time.Duration) Cache {
+	cache := Cache{
+		entries: map[string]cacheEntry{},
+		mu:      &sync.Mutex{},
+	}
+	go cache.reapLoop(interval)
+	return cache
+}
+
 func (c *Cache) reapLoop(interval time.Duration) {
 	ticker := time.NewTicker(interval)
 	for range ticker.C {
@@ -53,15 +62,6 @@ func (c *Cache) reap(limit time.Time) {
 			delete(c.entries, k)
 		}
 	}
-}
-
-func NewCache(interval time.Duration) Cache {
-	cache := Cache{
-		entries: map[string]cacheEntry{},
-		mu:      &sync.Mutex{},
-	}
-	go cache.reapLoop(interval)
-	return cache
 }
 
 func GetFromOrAddToCache(url string, cache *Cache) ([]byte, error) {

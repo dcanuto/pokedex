@@ -3,16 +3,15 @@ package repl
 import "github.com/dcanuto/pokedexcli/internal/pokecache"
 
 type config struct {
-	next            *string
-	previous        *string
-	desiredLocation string
-	cache           pokecache.Cache
+	next     *string
+	previous *string
+	cache    pokecache.Cache
 }
 
 type cliCommand struct {
 	name        string
 	description string
-	Callback    func(*config) error
+	Callback    func(*config, string) error
 }
 
 func getCommands() map[string]cliCommand {

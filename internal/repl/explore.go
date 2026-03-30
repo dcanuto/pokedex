@@ -60,8 +60,8 @@ type locationArea struct {
 	} `json:"pokemon_encounters"`
 }
 
-func commandExplore(config *config) error {
-	url := "https://pokeapi.co/api/v2/location-area/" + config.desiredLocation
+func commandExplore(config *config, desiredLocation string) error {
+	url := "https://pokeapi.co/api/v2/location-area/" + desiredLocation
 
 	body, err := pokecache.GetFromOrAddToCache(url, &config.cache)
 	if err != nil {
