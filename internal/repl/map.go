@@ -1,28 +1,21 @@
 package repl
 
 import (
-	"encoding/json"
 	"fmt"
-
-	"github.com/dcanuto/pokedexcli/internal/pokecache"
 )
 
-type locationResourceList struct {
-	Count    int     `json:"count"`
-	Next     *string `json:"next"`
-	Previous *string `json:"previous"`
-	Results  []struct {
-		Name string `json:"name"`
-		URL  string `json:"url"`
-	} `json:"results"`
-}
-
 func commandMap(config *config, location string) error {
-	url := "https://pokeapi.co/api/v2/location-area/"
-	if config.next != nil {
-		url = *config.next
+	m, err := config.client.GetLocationAreas(config.next)
+	if err != nil {
+		return err
 	}
-	return getLocationAreas(config, url)
+
+	config.next = m.Next
+	config.previous = m.Previous
+	for _, result := range m.Results {
+		fmt.Println(result.Name)
+	}
+	return nil
 }
 
 func commandMapb(config *config, location string) error {
@@ -30,21 +23,12 @@ func commandMapb(config *config, location string) error {
 		fmt.Println("you're on the first page")
 		return nil
 	}
-	url := *config.previous
-	return getLocationAreas(config, url)
-}
 
-func getLocationAreas(config *config, url string) error {
-	body, err := pokecache.GetFromOrAddToCache(url, &config.cache)
+	m, err := config.client.GetLocationAreas(config.previous)
 	if err != nil {
 		return err
 	}
 
-	m := locationResourceList{}
-	err = json.Unmarshal(body, &m)
-	if err != nil {
-		return err
-	}
 	config.next = m.Next
 	config.previous = m.Previous
 	for _, result := range m.Results {

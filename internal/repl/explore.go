@@ -63,7 +63,7 @@ type locationArea struct {
 func commandExplore(config *config, desiredLocation string) error {
 	url := "https://pokeapi.co/api/v2/location-area/" + desiredLocation
 
-	body, err := pokecache.GetFromOrAddToCache(url, &config.cache)
+	body, err := pokecache.GetFromOrAddToCache(url, &config.client.Cache)
 	if err != nil {
 		return err
 	}

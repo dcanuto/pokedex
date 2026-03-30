@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/dcanuto/pokedexcli/internal/pokecache"
+	"github.com/dcanuto/pokedexcli/internal/pokeapi"
 )
 
 func StartRepl() {
@@ -16,7 +16,7 @@ func StartRepl() {
 	config := config{
 		next:     nil,
 		previous: nil,
-		cache:    pokecache.NewCache(interval),
+		client:   pokeapi.NewClient(interval),
 		pokedex:  map[string]pokemon{},
 	}
 	for {

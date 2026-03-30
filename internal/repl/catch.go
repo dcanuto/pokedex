@@ -297,7 +297,7 @@ func commandCatch(config *config, name string) error {
 
 	url := "https://pokeapi.co/api/v2/pokemon/" + name
 
-	body, err := pokecache.GetFromOrAddToCache(url, &config.cache)
+	body, err := pokecache.GetFromOrAddToCache(url, &config.client.Cache)
 	if err != nil {
 		return err
 	}

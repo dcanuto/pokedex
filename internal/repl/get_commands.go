@@ -1,11 +1,11 @@
 package repl
 
-import "github.com/dcanuto/pokedexcli/internal/pokecache"
+import "github.com/dcanuto/pokedexcli/internal/pokeapi"
 
 type config struct {
 	next     *string
 	previous *string
-	cache    pokecache.Cache
+	client   pokeapi.Client
 	pokedex  map[string]pokemon
 }
 
