@@ -1,11 +1,16 @@
 package repl
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 )
 
-func commandCatch(config *config, name string) error {
+func commandCatch(config *config, args ...string) error {
+	if len(args) > 1 {
+		return errors.New("catch only accepts 1 argument")
+	}
+	name := args[0]
 	fmt.Printf("Throwing a Pokeball at %s...\n", name)
 
 	pokemon, err := config.client.GetPokemon(name)

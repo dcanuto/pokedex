@@ -1,10 +1,15 @@
 package repl
 
 import (
+	"errors"
 	"fmt"
 )
 
-func commandInspect(config *config, pokemonName string) error {
+func commandInspect(config *config, args ...string) error {
+	if len(args) > 1 {
+		return errors.New("inspect only accepts 1 argument")
+	}
+	pokemonName := args[0]
 	pokemon, ok := config.pokedex[pokemonName]
 	if !ok {
 		fmt.Println("you have not caught that pokemon")
